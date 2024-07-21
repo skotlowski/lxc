@@ -1,5 +1,18 @@
-# lxc
-ansible and lxc learning
+# Create LXC containers using ansible
+## To run containers building:
+```sh
+sudo ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory main.yml --extra-vars "ansible_user=containers_user password=containers_password"
+```
+## To select containers to build use limit
+Check inventory file to see available containers.
 
-To run containers building:
-sudo ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory main.yml --extra-vars "ansible_user=szymon ansible_password=test ansible_sudo_pass=test"
+Available are ubuntu1, ubuntu2, ubuntu3
+### Examples
+Limit building to ubuntu1 and ubuntu3
+```sh
+sudo ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory main.yml --extra-vars "ansible_user=szymon password=test" --limit "ubuntu1,ubuntu3"
+```
+Limit building to ubuntu1
+```sh
+sudo ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory main.yml --extra-vars "ansible_user=szymon password=test" --limit "ubuntu1"
+```
