@@ -1,0 +1,9 @@
+---
+- hosts: ubuntu2
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Install k3b
+      apt:
+        name: k3b
+        state: present

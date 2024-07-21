@@ -1,0 +1,4 @@
+[containers]
+ubuntu1 ansible_host=10.0.3.101
+ubuntu2 ansible_host=10.0.3.102
+ubuntu3 ansible_host=10.0.3.103

@@ -1,0 +1,9 @@
+---
+- hosts: ubuntu3
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Install net-tools
+      apt:
+        name: net-tools
+        state: present

@@ -1,0 +1,9 @@
+---
+- hosts: ubuntu1
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Install java
+      apt:
+        name: default-jdk
+        state: present

@@ -1,0 +1,8 @@
+---
+- import_playbook: playbooks/prepare_containers.yml
+
+- import_playbook: playbooks/ubuntu_first.yml
+
+- import_playbook: playbooks/ubuntu_second.yml
+
+- import_playbook: playbooks/ubuntu_third.yml
