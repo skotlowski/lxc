@@ -35,20 +35,20 @@
       shell: lxc-start ubuntu20 && lxc-start ubuntu20_1 && lxc-start ubuntu20_2
     
     - name: Configure user in ubuntu20
-      shell: lxc-attach -n ubuntu20 -- bash -c 'useradd -m -s /bin/bash szymon && echo "szymon:test" | chpasswd'
+      shell: lxc-attach -n ubuntu20 -- bash -c 'useradd -m -s /bin/bash {{ ansible_user }} && echo "{{ ansible_user }}:{{ ansible_password }}" | chpasswd'
 
     - name: Add user to sudoers in ubuntu20
-      shell: lxc-attach -n ubuntu20 -- usermod -aG sudo szymon
+      shell: lxc-attach -n ubuntu20 -- usermod -aG sudo {{ ansible_user }}
 
     - name: Configure user in ubuntu20_1
-      shell: lxc-attach -n ubuntu20_1 -- bash -c 'useradd -m -s /bin/bash szymon && echo "szymon:test" | chpasswd'
+      shell: lxc-attach -n ubuntu20_1 -- bash -c 'useradd -m -s /bin/bash {{ ansible_user }} && echo "{{ ansible_user }}:{{ ansible_password }}" | chpasswd'
 
     - name: Add user to sudoers in ubuntu20_1
-      shell: lxc-attach -n ubuntu20_1 -- usermod -aG sudo szymon
+      shell: lxc-attach -n ubuntu20_1 -- usermod -aG sudo {{ ansible_user }}
 
     - name: Configure user in ubuntu20_2
-      shell: lxc-attach -n ubuntu20_2 -- bash -c 'useradd -m -s /bin/bash szymon && echo "szymon:test" | chpasswd'
+      shell: lxc-attach -n ubuntu20_2 -- bash -c 'useradd -m -s /bin/bash {{ ansible_user }} && echo "{{ ansible_user }}:{{ ansible_password }}" | chpasswd'
 
     - name: Add user to sudoers in ubuntu20_2
-      shell: lxc-attach -n ubuntu20_2 -- usermod -aG sudo szymon
+      shell: lxc-attach -n ubuntu20_2 -- usermod -aG sudo {{ ansible_user }}
 
