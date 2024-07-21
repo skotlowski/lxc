@@ -1,4 +1,10 @@
 # Create LXC containers using ansible
+
+## Requirements
+Ubuntu 20.04 +
+```sh
+sudo apt install lxc lxc-templates ansible sshpass -y
+```
 ## To run containers building:
 ```sh
 sudo ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory main.yml --extra-vars "ansible_user=containers_user password=containers_password"
