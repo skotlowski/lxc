@@ -1,5 +1,4 @@
 ---
-- import_playbook: playbooks/prepare_containers.yml
 
 - import_playbook: playbooks/ubuntu_first.yml
 

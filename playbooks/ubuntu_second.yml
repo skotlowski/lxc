@@ -1,8 +1,43 @@
 ---
 - hosts: ubuntu2
+  vars:
+    ansible_password: "{{ password }}"
+    ansible_sudo_pass: "{{ password }}"
   gather_facts: false
   become: true
   tasks:
+    - name: Ensure that .ssh directory exists
+      shell: lxc-stop ubuntu20_1 || echo > /dev/null
+      delegate_to: localhost
+    
+    - name: Ensure that .ssh directory exists
+      shell: lxc-destroy ubuntu20_1 || echo > /dev/null
+      delegate_to: localhost
+
+    - name: Remove container from known_hosts
+      shell: ssh-keygen -R {{ ansible_host }}
+      delegate_to: localhost
+    
+    - name: Create ubuntu20_1 container
+      shell: lxc-create -n ubuntu20_1 -t ubuntu -- --release focal --arch amd64 --packages openssh-server
+      delegate_to: localhost
+    
+    - name: Copy container config to /var/lib/lxc/ubuntu20_1
+      shell: cp ../configs/ubuntu2/config /var/lib/lxc/ubuntu20_1/config && cp ../configs/ubuntu2/10-lxc.yaml /var/lib/lxc/ubuntu20_1/rootfs/etc/netplan/10-lxc.yaml
+      delegate_to: localhost
+
+    - name: Start ubuntu20_1 container
+      shell: lxc-start ubuntu20_1
+      delegate_to: localhost
+   
+    - name: Configure user in ubuntu20_1
+      shell: lxc-attach -n ubuntu20_1 -- bash -c 'useradd -m -s /bin/bash {{ ansible_user }} && echo "{{ ansible_user }}:{{ ansible_password }}" | chpasswd'
+      delegate_to: localhost
+
+    - name: Add user to sudoers in ubuntu20_1
+      shell: lxc-attach -n ubuntu20_1 -- usermod -aG sudo {{ ansible_user }}
+      delegate_to: localhost
+
     - name: Install k3b
       apt:
         name: k3b
