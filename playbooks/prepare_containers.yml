@@ -3,9 +3,16 @@
   hosts: localhost
   gather_facts: false
   tasks:
+    - name: Ensure that .ssh directory exists
+      shell: mkdir -p /root/.ssh
+
+    - name: Ensure that known_hosts file exists
+      shell: touch /root/.ssh/known_hosts
+
     - name: Remove container from known_hosts
       shell: ssh-keygen -R {{ hostvars[item].ansible_host }}
       with_items: "{{ groups['containers'] }}"
+
     - name: Create ubuntu20 container
       shell: lxc-create -n ubuntu20 -t ubuntu -- --release focal --arch amd64 --packages openssh-server
  
