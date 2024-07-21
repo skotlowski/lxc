@@ -1,8 +1,43 @@
 ---
 - hosts: ubuntu1
+  vars:
+    ansible_password: "{{ password }}"
+    ansible_sudo_pass: "{{ password }}"
   gather_facts: false
   become: true
   tasks:
+    - name: Ensure that .ssh directory exists
+      shell: lxc-stop ubuntu20 || echo > /dev/null
+      delegate_to: localhost
+    
+    - name: Ensure that .ssh directory exists
+      shell: lxc-destroy ubuntu20 || echo > /dev/null
+      delegate_to: localhost
+
+    - name: Remove container from known_hosts
+      shell: ssh-keygen -R {{ ansible_host }}
+      delegate_to: localhost
+    
+    - name: Create ubuntu20 container
+      shell: lxc-create -n ubuntu20 -t ubuntu -- --release focal --arch amd64 --packages openssh-server
+      delegate_to: localhost
+    
+    - name: Copy container config to /var/lib/lxc/ubuntu20
+      shell: cp ../configs/ubuntu1/config /var/lib/lxc/ubuntu20/config && cp ../configs/ubuntu1/10-lxc.yaml /var/lib/lxc/ubuntu20/rootfs/etc/netplan/10-lxc.yaml
+      delegate_to: localhost
+
+    - name: Start ubuntu20 container
+      shell: lxc-start ubuntu20
+      delegate_to: localhost
+   
+    - name: Configure user in ubuntu20
+      shell: lxc-attach -n ubuntu20 -- bash -c 'useradd -m -s /bin/bash {{ ansible_user }} && echo "{{ ansible_user }}:{{ ansible_password }}" | chpasswd'
+      delegate_to: localhost
+
+    - name: Add user to sudoers in ubuntu20
+      shell: lxc-attach -n ubuntu20 -- usermod -aG sudo {{ ansible_user }}
+      delegate_to: localhost
+
     - name: Install java
       apt:
         name: default-jdk
